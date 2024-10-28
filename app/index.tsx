@@ -5,7 +5,7 @@ import ScreenWrapper from '@/components/ScreenWrapper';
 
 const index = () => {
   return (
-    <ScreenWrapper>
+    <ScreenWrapper bg={""}>
       <Text>index</Text>
       <Button title='welcome' onPress={() => router.push('/welcome')}/>
     </ScreenWrapper>
