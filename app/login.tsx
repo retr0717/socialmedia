@@ -8,6 +8,7 @@ import { theme } from '@/constants/theme'
 import Input from '@/components/Input'
 import Icon from '@/assets/icons/index'
 import Button from '@/components/Button'
+import { supabase } from '@/lib/supabase'
 
 const login = () => {
     const router = useRouter();
@@ -19,6 +20,21 @@ const login = () => {
         if(!emailRef.current || !passwordRef.current)
         {
             Alert.alert('Login','Please fill the fields!')
+        }
+
+        const email = emailRef.current.trim();
+        const password = passwordRef.current.trim();
+
+        setLoading(true);
+
+        const {error} = await supabase.auth.signInWithPassword({email,password});
+
+        setLoading(false);
+
+        console.log(error);
+
+        if(error){
+          Alert.alert('Login', error.message);
         }
     }
 
