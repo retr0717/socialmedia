@@ -35,7 +35,7 @@ const Home = () => {
 
           <Text style={styles.title}>ChitChat</Text>
 
-          <View style={styles.ions}>
+          <View style={styles.icons}>
 
             <Pressable onPress={() => router.push('/(main)/notification')}>
               <Icon name={'heart'} size={hp(3.2)} strokeWidth={2} color={theme.colors.text} />
@@ -48,8 +48,8 @@ const Home = () => {
             <Pressable onPress={() => router.push('/(main)/profile')}>
               <Avatar
                 uri={user?.image}
-                size={hp(4.3)}
-                rounded={theme.radius.sm}
+                size={hp(5.3)}
+                rounded={theme.radius.md}
                 style={{borderWidth: 2}}
               />
             </Pressable>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.gray,
     borderWidth: 3, 
   },
-  ions: {
+  icons: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
