@@ -5,7 +5,7 @@ import { hp } from '@/helpers/common'
 
 const Input = (props:any) => {
   return (
-    <View style={[styles.container, props.containerStyles && props.containerStyles]}>
+    <View style={[styles.container, props.containerStyle && props.containerStyle]}>
       {
         props.icon && props.icon
       }
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         height: hp(7.2),
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 0.4,
+        borderWidth: 0.5,
         borderColor: theme.colors.text,
         borderRadius: theme.radius.xxl,
         borderCurve: 'continuous',

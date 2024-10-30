@@ -15,17 +15,17 @@ const Home = () => {
     const {setAuth, user} = useAuth();
     const router = useRouter();
 
-    const onLogout = async () => {
+    // const onLogout = async () => {
         
-        await setAuth(null);
+    //     await setAuth(null);
 
-        const {error} = supabase.auth.signOut();
+    //     const {error} = supabase.auth.signOut();
 
-        if(error)
-        {
-            Alert.alert('Logout', 'Logout failed!');
-        }
-    }
+    //     if(error)
+    //     {
+    //         Alert.alert('Logout', 'Logout failed!');
+    //     }
+    // }
     
   return (
     <ScreenWrapper bg={"white"}>
@@ -50,7 +50,7 @@ const Home = () => {
                 uri={user?.image}
                 size={hp(5.3)}
                 rounded={theme.radius.md}
-                style={{borderWidth: 2}}
+                style={{borderWidth: 2,width:wp(7.5)}}
               />
             </Pressable>
 
@@ -58,7 +58,7 @@ const Home = () => {
 
         </View>
       </View>
-      <Button title={"logout"} onPress={onLogout}/>
+      {/* <Button title={"logout"} onPress={onLogout}/> */}
     </ScreenWrapper>
   )
 }
@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
   },
   avatarImage: {
     height: hp(4.3),
-    width: hp(4.3),
     borderRadius: theme.radius.sm,
     borderCurve: 'continuous',
     borderColor: theme.colors.gray,

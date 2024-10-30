@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { useAuth } from '@/contexts/AuthContext'
@@ -9,12 +9,15 @@ import Icon from '@/assets/icons'
 import { theme } from '@/constants/theme'
 import { Alert } from 'react-native'
 import { supabase } from '@/lib/supabase'
+import Avatar from '@/components/Avatar'
+import { getUserImageSrc } from '@/services/imageService'
 
 const Profile = () => {
 
   const {user, setAuth} = useAuth();
   const router = useRouter();
 
+  //console.log(user);
   const onLogout = async () => {
         
     await setAuth(null);
@@ -56,10 +59,57 @@ const UserHeader = ({user, router, handleLogout} : {user: any, router: any, hand
   return(
     <View style={{flex: 1, backgroundColor: 'white', paddingHorizontal: wp(4)}}>
       <View>
-        <Header title="Profile" showBackButton={true}/>
+        <Header title="Profile" mb={30} />
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Icon name={'logout'} color={theme.colors.rose} />
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.container}>
+        <View style={{gap: 15}}>
+          <View style={styles.avatarContainer}>
+            <Avatar 
+              uri={user?.image}
+              size={hp(12)}
+              rounded={theme.radius.xxl*1.4}
+              style={{width:wp(20)}}
+            />
+            <Pressable style={styles.editIcon} onPress={() => router.push('/(main)/editProfile') }>
+              <Icon name='edit' strokeWidth={2.5} size={20} />
+            </Pressable>
+          </View>
+
+          {/* user and address */}
+          <View style={{alignItems: 'center', gap: 4}}>
+            <Text style={styles.username}>{user && user.name}</Text>
+            <Text style={styles.infoText}>{user && user.address}</Text>
+          </View>
+
+          {/* email, address, phone no */}
+          <View style={{gap: 10}}>
+            <View style={styles.info}>
+              <Icon name='mail' size={20} />
+              <Text style={styles.infoText}>{user && user?.email}</Text>
+            </View>
+
+            {
+              user && user.phoneNo && (
+                  <View style={styles.info}>
+                    <Icon name={'call'} size={20} />
+                    <Text style={styles.infoText}>{user && user?.phoneNo}</Text>
+                </View>
+              )
+            }
+
+            {
+              user && user.bio && (
+                <Text style={styles.infoText}>{user.bio}</Text>
+              )
+            }
+
+          </View>
+
+        </View>
       </View>
     </View>
   );

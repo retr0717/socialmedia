@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router'
 import { theme } from '@/constants/theme'
 import { hp } from '@/helpers/common'
 
-const Header = ({title, showBackButton = false, mb=10, handleLogout}: {title:string, showBackButton: boolean, md: any, handleLogout: any}) => {
+const Header = ({title, showBackButton = true, mb=10, handleLogout}: {title:string, showBackButton: boolean, mb: number, handleLogout: any}) => {
 
     const router = useRouter();
     return (

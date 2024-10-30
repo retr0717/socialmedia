@@ -20,7 +20,7 @@ const Avatar = ({
     <Image
         source={getUserImageSrc(uri)}
         transition={100}
-        style={[styles.avatar, {height: size, borderRadius: rounded, width:wp(7.5)}, style]}
+        style={[styles.avatar, {height: size, borderRadius: rounded}, style]}
     />
   )
 }
