@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { hp, wp } from '@/helpers/common'
 import { theme } from '@/constants/theme'
@@ -9,10 +9,15 @@ import { useAuth } from '@/contexts/AuthContext'
 import { getUserImageSrc } from '@/services/imageService'
 import Icon from '@/assets/icons'
 import Input from '@/components/Input'
+import Button from '@/components/Button'
+import { updateUserData } from '@/services/userService'
+import { useRouter } from 'expo-router'
 
 const EditProfile = () => {
 
-  const {user: currentUser} = useAuth();
+  const {user: currentUser, setUserData} = useAuth();
+  const router = useRouter();
+
   let imageSource = getUserImageSrc(user?.image);
 
   //form inputs.
@@ -24,9 +29,36 @@ const EditProfile = () => {
     address: ''
   });
 
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async () => {
+    let userData = {...user};
+    const {name, phoneNo, address, image, bio} = userData;
+    if(!name || !phoneNo || !address || ! bio)
+    {
+      Alert.alert('Profile', "Please fill all the fields!");
+      return;
+    }
+
+    setLoading(true);
+    //update the data.
+
+    const res = await updateUserData(currentUser?.id, userData);
+    setLoading(false);
+
+    if(res.success)
+    {
+      setUserData({...currentUser, ...userData});
+      router.back();
+    }
+    console.log("update response : ", res);
+
+  }
 
   const onPickImage = async() => {
   }
+
+
 
   useEffect(() => {
     
@@ -68,21 +100,21 @@ const EditProfile = () => {
               icon={<Icon name='user'/>}
               placeholder='Enter your name'
               value={user.name}
-              onChageText={(value : any )=> setUser({...user, name: value})}
+              onChangeText={(value : any )=> setUser({...user, name: value})}
             />
 
             <Input
               icon={<Icon name='call'/>}
               placeholder='Enter your phone no'
               value={user.phoneNo}
-              onChageText={(value : any )=> setUser({...user, phoneNo: value})}
+              onChangeText={(value : string )=> setUser({...user, phoneNo: value})}
             />
 
             <Input
               icon={<Icon name='location'/>}
               placeholder='Enter your address'
               value={user.address}
-              onChageText={(value : any )=> setUser({...user, address: value})}
+              onChangeText={(value : any )=> setUser({...user, address: value})}
             />
 
             <Input
@@ -90,8 +122,11 @@ const EditProfile = () => {
               value={user.bio}
               multiline={true}
               containerStyle={styles.bio}
-              onChageText={(value : any )=> setUser({...user, bio: value})}
+              onChangeText={(value : any )=> setUser({...user, bio: value})}
             />
+
+            {/* submit button */}
+            <Button title='Update' loading={loading} onPress={onSubmit}/>
 
           </View>
 
