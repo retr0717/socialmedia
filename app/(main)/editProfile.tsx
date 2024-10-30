@@ -10,15 +10,14 @@ import { getUserImageSrc } from '@/services/imageService'
 import Icon from '@/assets/icons'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
-import { updateUserData } from '@/services/userService'
-import { useRouter } from 'expo-router'
+import { updateUserData } from '@/services/userService';
+import { useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 
 const EditProfile = () => {
 
   const {user: currentUser, setUserData} = useAuth();
   const router = useRouter();
-
-  let imageSource = getUserImageSrc(user?.image);
 
   //form inputs.
   const [user, setUser] = useState({
@@ -55,11 +54,6 @@ const EditProfile = () => {
 
   }
 
-  const onPickImage = async() => {
-  }
-
-
-
   useEffect(() => {
     
     if(currentUser)
@@ -74,6 +68,23 @@ const EditProfile = () => {
     }
 
   },[currentUser])
+
+  const onPickImage = async() => {
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      setUser({...user, image: result.assets[0]});
+    }
+
+  }
+
+  let imageSource = user?.image && typeof user.image == 'object' ? user.image : getUserImageSrc(user?.image);
 
   return (
     <ScreenWrapper bg={'white'}>
