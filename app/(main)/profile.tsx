@@ -7,14 +7,40 @@ import Header from '@/components/Header'
 import { hp, wp } from '@/helpers/common'
 import Icon from '@/assets/icons'
 import { theme } from '@/constants/theme'
+import { Alert } from 'react-native'
+import { supabase } from '@/lib/supabase'
 
 const Profile = () => {
 
-  const {user, setAuth} = useAuth;
+  const {user, setAuth} = useAuth();
   const router = useRouter();
+
+  const onLogout = async () => {
+        
+    await setAuth(null);
+
+    const {error} = supabase.auth.signOut();
+
+    if(error)
+    {
+        Alert.alert('Logout', 'Logout failed!');
+    }
+  }
 
   const handleLogout = async() => {
     //show confirm modal.
+    Alert.alert('Confirm','Are You Sure?', [
+      {
+        text: 'cancel',
+        onPress: () => console.log('modal cancelled'),
+        style: 'cancel',
+      },
+      {
+        text: 'Logout',
+        onPress: () => onLogout(),
+        style: 'destructive',
+      }
+    ])
   }
 
   return (
