@@ -6,7 +6,7 @@ import ScreenWrapper from '@/components/ScreenWrapper'
 import Header from '@/components/Header'
 import { Image } from 'expo-image'
 import { useAuth } from '@/contexts/AuthContext'
-import { getUserImageSrc } from '@/services/imageService'
+import { getUserImageSrc, uploadFile } from '@/services/imageService'
 import Icon from '@/assets/icons'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
@@ -31,6 +31,7 @@ const EditProfile = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
+    
     let userData = {...user};
     const {name, phoneNo, address, image, bio} = userData;
     if(!name || !phoneNo || !address || ! bio)
@@ -40,8 +41,17 @@ const EditProfile = () => {
     }
 
     setLoading(true);
-    //update the data.
 
+    //image upload.
+    if(typeof image == 'object')
+    {
+      let imageRes = await uploadFile('profiles', image?.uri, true);
+
+      if((imageRes.success)) userData.image = imageRes.data;
+      else userData.image = null;
+    }
+
+    //update the data.
     const res = await updateUserData(currentUser?.id, userData);
     setLoading(false);
 
