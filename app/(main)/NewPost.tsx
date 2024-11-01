@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import Header from '@/components/Header'
@@ -14,6 +14,7 @@ import Button from '@/components/Button'
 import { Image } from 'react-native'
 import { getSupabaseFileUrl } from '@/services/imageService';
 import { Video }from 'expo-av';
+import { createOrUpdatePost } from '@/services/postService'
 
 const NewPost = () => {
 
@@ -42,7 +43,6 @@ const NewPost = () => {
 
     let result = await ImagePicker.launchImageLibraryAsync(mediaConfig);
 
-    console.log("onPick : ", result);
 
     if(!result.canceled)
     {
@@ -61,15 +61,13 @@ const NewPost = () => {
   const getFileType = (file: any) => {
     if(!file) return null;
 
-    console.log("getFileType:  ", file);
-
     if(isLocalFile(file)){
       return file.type;
     }
 
     //console.log("get file : ",file);
     //check the image or video for remote file.
-    if(file.includes('postImage'))
+    if(file.includes('postImages'))
     {
       return 'image';
     }
@@ -87,7 +85,33 @@ const NewPost = () => {
   }
 
   const onSubmt = async () => {
-    
+
+    if(!bodyRef && !file)
+    {
+      Alert.alert('New Post', 'Please fill the required fields');
+      return;
+    }
+
+    let data = {
+      file,
+      body: bodyRef.current,
+      userid: user?.id
+    }
+
+    setLoading(true);
+    const res = await createOrUpdatePost(data);
+    setLoading(false);
+
+    if(res?.success)
+    {
+      setFile(null);
+      bodyRef.current = '';
+      editorRef.current?.setContentHTML('');
+      router.back();
+    }
+    else{
+      Alert.alert('Post', 'Post upload failed!');
+    }
   }
 
   return (
