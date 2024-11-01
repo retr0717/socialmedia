@@ -12,7 +12,8 @@ import { useRouter } from 'expo-router'
 import Icon from '@/assets/icons'
 import Button from '@/components/Button'
 import { Image } from 'react-native'
-import { getSupabaseFileUrl } from '@/services/imageService'
+import { getSupabaseFileUrl } from '@/services/imageService';
+import { Video }from 'expo-av';
 
 const NewPost = () => {
 
@@ -41,6 +42,8 @@ const NewPost = () => {
 
     let result = await ImagePicker.launchImageLibraryAsync(mediaConfig);
 
+    console.log("onPick : ", result);
+
     if(!result.canceled)
     {
       setFile(result.assets[0]);
@@ -58,6 +61,7 @@ const NewPost = () => {
   const getFileType = (file: any) => {
     if(!file) return null;
 
+    console.log("getFileType:  ", file);
 
     if(isLocalFile(file)){
       return file.type;
@@ -120,7 +124,15 @@ const NewPost = () => {
               <View style={styles.file}>
                 {
                   getFileType(file) == 'video' ? (
-                    <></>
+                    <Video
+                      style={{flex: 1}}
+                      source={{
+                        uri: getFileUrl(file)
+                      }}
+                      useNativeControls
+                      resizeMode='cover'
+                      isLooping
+                    />
                   )
                   :
                   (
