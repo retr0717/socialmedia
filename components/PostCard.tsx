@@ -31,8 +31,6 @@ const PostCard = (
     {item, currentUser, router, hasShadow=true}:
     {item: any, currentUser: any, router: any, hasShadow: boolean}) => {
   
-    console.log("item: ", item);
-
     const shadowStyles = {
         shadowOffset: { 
             width: 0,

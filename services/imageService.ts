@@ -29,8 +29,6 @@ export const uploadFile = async (folderName : string, fileUri: string, isImage=t
             return {success: false, msg: 'Could not upload the file'};
         }
 
-        console.log(data);
-
         return {success: true, data: data?.path};
     } 
     catch (error) 
