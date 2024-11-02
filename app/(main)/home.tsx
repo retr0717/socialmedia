@@ -91,7 +91,7 @@ const Home = () => {
             <Pressable onPress={() => router.push('/(main)/profile')}>
               <Avatar
                 uri={user?.image}
-                size={hp(4.3)}
+                size={hp(3.6)}
                 rounded={theme.radius.md}
                 style={{borderWidth: 2,width:wp(6.5)}}
               />
@@ -100,7 +100,7 @@ const Home = () => {
           </View>
 
         </View>
-      </View>
+
 
       {/* posts display */}
       <FlatList
@@ -119,6 +119,8 @@ const Home = () => {
           </View>
         )}
       />
+
+      </View>
 
     </ScreenWrapper>
   )
@@ -157,7 +159,7 @@ const styles = StyleSheet.create({
     gap: 18,
   },
   listStyle: {
-    padding: 10,
+    padding: 20,
     //paddingHorizontal: wp(4),
   },
   noPost: {

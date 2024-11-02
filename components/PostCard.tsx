@@ -52,7 +52,7 @@ const PostCard = (
         {/* user info */}
         <View style={styles.userInfo}>
             <Avatar
-                size={hp(6.5)}
+                size={hp(4.5)}
                 uri={item?.user?.image}
                 rounded={theme.radius.md}
                 style={{width :wp(8.8)}}
@@ -163,10 +163,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 8,
-        fontSize: hp(2),
+        fontSize: hp(1.4),
     },
     username: {
-        fontSize: hp(3.1),
+        fontSize: hp(1.9),
         color: theme.colors.textDark,
         fontWeight: theme.fonts.semibold
     },
@@ -204,7 +204,6 @@ const styles = StyleSheet.create({
         gap: 18
     },
     count: {
-        color: theme.colors.text,
-        fontSize: hp(2.8)   
+        color: theme.colors.text,  
     }
 })
