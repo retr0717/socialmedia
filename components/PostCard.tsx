@@ -44,6 +44,8 @@ const PostCard = (
     }
 
     const createdAt = moment(item?.created_at).format('MMM D');
+    const liked = false;
+    const likes = [];
 
     return (
     <View style={[styles.container, hasShadow && shadowStyles]}>
@@ -106,6 +108,36 @@ const PostCard = (
             )
         }
       </View>
+
+
+    {/* like, share, comment */}
+    <View style={styles.footer}>
+        <View style={styles.footerButton}>
+            <TouchableOpacity>
+                <Icon 
+                    name='heart' 
+                    size={24}
+                    fill={liked? theme.colors.rose : 'transparent'}
+                    color={liked? theme.colors.rose : theme.colors.textLight}/>
+            </TouchableOpacity>
+            <Text style={styles.count} >{likes?.length}</Text>
+        </View>
+
+        <View style={styles.footerButton}>
+            <TouchableOpacity>
+                <Icon name='comment' size={24} color={theme.colors.textLight}/>
+            </TouchableOpacity>
+            <Text style={styles.count} >{likes?.length}</Text>
+        </View>
+
+        <View style={styles.footerButton}>
+            <TouchableOpacity>
+                <Icon name='share' size={24} color={theme.colors.textLight}/>
+            </TouchableOpacity>
+        </View>
+
+    </View>
+
     </View>
   )
 }
@@ -175,6 +207,6 @@ const styles = StyleSheet.create({
     },
     count: {
         color: theme.colors.text,
-        fontSize: hp(1.8)   
+        fontSize: hp(2.8)   
     }
 })
