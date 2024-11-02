@@ -2,6 +2,24 @@ import * as FileSystem from 'expo-file-system';
 import { decode }from 'base64-arraybuffer';
 import { supabase } from '@/lib/supabase';
 
+export const downloadFile = async (url : any) => {
+
+    try{
+        const {uri} = await FileSystem.downloadAsync(url, getLocalFilePath(url));
+        console.log(uri);
+        return uri;
+    }
+    catch(error){
+        return null;
+    }
+}
+
+export const getLocalFilePath = (filePath : any) => {
+    let fileName = filePath.split('/').pop();
+    console.log("file name : ", fileName);
+    return `${FileSystem.documentDirectory}${fileName}`;
+}
+
 export const uploadFile = async (folderName : string, fileUri: string, isImage=true) => {
     try 
     {

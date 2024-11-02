@@ -120,9 +120,7 @@ const Home = () => {
         />}
 
         onEndReached={() => {
-          console.log(limit);
           getPosts();
-          console.log("end of posts")
         }}
 
         onEndReachedThreshold={0}
