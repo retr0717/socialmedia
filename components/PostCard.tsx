@@ -10,6 +10,7 @@ import { Image } from 'expo-image';
 import { downloadFile, getSupabaseFileUrl } from '@/services/imageService';
 import { Video } from 'expo-av';
 import { createPostLike, removePostLike } from '@/services/postService';
+import Loading from './Loading';
 
 const textStyle = {
     color: theme.colors.dark,
@@ -33,6 +34,7 @@ const PostCard = (
     {item: any, currentUser: any, router: any, hasShadow: boolean}) => {
 
     const [likes, setLikes] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setLikes(item?.postLikes);
@@ -88,7 +90,10 @@ const PostCard = (
         if(item?.file)
         {
             //download and send the uri.
+            setLoading(true);
             let url = await downloadFile(getSupabaseFileUrl(item?.file)?.uri);
+            setLoading(false);
+
             content.url = url;
         }
 
@@ -183,9 +188,17 @@ const PostCard = (
         </View>
 
         <View style={styles.footerButton}>
-            <TouchableOpacity onPress={onShare}>
-                <Icon name='share' size={24} color={theme.colors.textLight}/>
-            </TouchableOpacity>
+            {
+                loading? (
+                    <Loading size='small'/>
+                )
+                :
+                (
+                    <TouchableOpacity onPress={onShare}>
+                        <Icon name='share' size={24} color={theme.colors.textLight}/>
+                    </TouchableOpacity>
+                )
+            }
         </View>
 
     </View>
