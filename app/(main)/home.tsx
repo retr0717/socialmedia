@@ -1,5 +1,5 @@
-import { Alert, Pressable, StyleSheet, Text, View} from 'react-native'
-import React from 'react'
+import { Alert, FlatList, Pressable, StyleSheet, Text, View} from 'react-native'
+import React, { useEffect, useState } from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import Button from '@/components/Button'
 import { useAuth } from '@/contexts/AuthContext'
@@ -9,11 +9,32 @@ import { theme } from '@/constants/theme'
 import Icon from '@/assets/icons'
 import { useRouter } from 'expo-router'
 import Avatar from '@/components/Avatar'
+import { fetchPosts } from '@/services/postService'
+import PostCard from '@/components/PostCard'
+
+let limit = 0;
 
 const Home = () => {
 
     const {setAuth, user} = useAuth();
     const router = useRouter();
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+      getPosts();
+    },[])
+
+    const getPosts = async () => {
+
+      limit += 10;
+
+      const res = await fetchPosts(limit);
+      
+      if(res.success)
+      {
+        setPosts(res.data);
+      }
+    }
 
     // const onLogout = async () => {
         
@@ -48,7 +69,7 @@ const Home = () => {
             <Pressable onPress={() => router.push('/(main)/profile')}>
               <Avatar
                 uri={user?.image}
-                size={hp(5.3)}
+                size={hp(4.3)}
                 rounded={theme.radius.md}
                 style={{borderWidth: 2,width:wp(7.5)}}
               />
@@ -58,7 +79,20 @@ const Home = () => {
 
         </View>
       </View>
-      {/* <Button title={"logout"} onPress={onLogout}/> */}
+
+      {/* posts display */}
+      <FlatList
+        data={posts}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listStyle}
+        keyExtractor={(item : any)=> item?.id.toString()}
+        renderItem={({item}: {item : any}) => <PostCard
+            item={item}
+            currentUser={user}
+            router={router}
+        />}
+      />
+
     </ScreenWrapper>
   )
 }
@@ -96,8 +130,8 @@ const styles = StyleSheet.create({
     gap: 18,
   },
   listStyle: {
-    paddingTop: 20,
-    paddingHorizontal: wp(4),
+    padding: 10,
+    //paddingHorizontal: wp(4),
   },
   noPost: {
     fontSize: hp(2),
