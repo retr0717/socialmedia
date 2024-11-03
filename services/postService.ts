@@ -1,6 +1,30 @@
 import { supabase } from "@/lib/supabase";
 import { uploadFile } from "./imageService";
 
+export const fetchPostsDetails = async (postId: any) => {
+    try
+    {
+       const {data, error} = await supabase
+       .from('posts')
+       .select('*, user: users (id, name, image), postLikes (*)')
+       .eq('id', postId)
+       .single()
+
+       if(error)
+       {
+        console.log("fetch posts details error occured");
+        return {success: false, msg : 'fetch posts details failed'};
+       }
+
+       return {success: true, data: data};
+    }
+    catch(error)
+    {
+        console.log("fetch posts details error : ",error);
+        return {success : false, msg: "could not fetch post details"};
+    }
+}
+
 export const createPostLike = async (postLike: any) => {
     try
     {

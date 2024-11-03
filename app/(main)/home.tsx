@@ -117,6 +117,7 @@ const Home = () => {
             item={item}
             currentUser={user}
             router={router}
+            showMoreIcon={true}
         />}
 
         onEndReached={() => {

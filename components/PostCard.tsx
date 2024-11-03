@@ -30,8 +30,8 @@ const tagStyles = {
 }
 
 const PostCard = (
-    {item, currentUser, router, hasShadow=true}:
-    {item: any, currentUser: any, router: any, hasShadow: boolean}) => {
+    {item, currentUser, router, hasShadow=true, showMoreIcon}:
+    {item: any, currentUser: any, router: any, hasShadow: boolean, showMoreIcon: boolean}) => {
 
     const [likes, setLikes] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -84,6 +84,12 @@ const PostCard = (
         
     }
 
+    const onPostDetails = () => {
+        if(!showMoreIcon) return null;
+        
+        router.push({pathname: 'PostDetails', params: {postId: item?.id}})
+    }
+
     const onShare = async () => {
         let content = {message: stripHtmlTags(item?.body)}
 
@@ -122,9 +128,13 @@ const PostCard = (
             </View>
         </View>
 
-        <TouchableOpacity>
-                <Icon name='threeDotsHorizontal' size={hp(3.5)} strokeWidth={3} color={theme.colors.text}/>
-        </TouchableOpacity>
+        {
+            showMoreIcon && (
+                <TouchableOpacity onPress={onPostDetails}>
+                    <Icon name='threeDotsHorizontal' size={hp(3.5)} strokeWidth={3} color={theme.colors.text}/>
+                </TouchableOpacity>
+            )
+        }
 
       </View>
 
@@ -181,7 +191,7 @@ const PostCard = (
         </View>
 
         <View style={styles.footerButton}>
-            <TouchableOpacity >
+            <TouchableOpacity onPress={onPostDetails}>
                 <Icon name='comment' size={24} color={theme.colors.textLight}/>
             </TouchableOpacity>
             <Text style={styles.count} >0</Text>
