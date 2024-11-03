@@ -1,7 +1,7 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { fetchPostsDetails } from '@/services/postService';
+import { createComment, fetchPostsDetails } from '@/services/postService';
 import { hp, wp } from '@/helpers/common';
 import { theme } from '@/constants/theme';
 import PostCard from '@/components/PostCard';
@@ -19,6 +19,7 @@ const PostDetails = () => {
     const commentRef = useRef(null);
     const router = useRouter();
     const {user} = useAuth();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
       getPostDetails();
@@ -30,6 +31,31 @@ const PostDetails = () => {
       if(res.success) setPost(res?.data);
 
       setStartLoading(false);
+    }
+
+    const onNewComment = async () => {
+
+      let data = {
+        userId: user?.id,
+        postId: post?.id,
+        text: commentRef.current
+      }
+
+      setLoading(true);
+      const res = await createComment(data);
+      setLoading(false);
+
+      if(res.success)
+      {
+        //send notification.
+        inputRef.current?.clear();
+        commentRef.current = "";
+      }
+      else
+      {
+        Alert.alert('Comment', res.msg);
+      }
+
     }
 
     if(statLoading)
@@ -62,9 +88,18 @@ const PostDetails = () => {
             containerStyle={{flex:1, height: hp(6.2), borderRadius: theme.radius.xl}}
           />
 
-          <TouchableOpacity style={styles.sendIcon}>
-            <Icon name='send' color={theme.colors.primaryDark} />
-          </TouchableOpacity>
+          {
+            loading ? (
+              <View>
+                <Loading size='small' />
+              </View>
+            ) : (
+              <TouchableOpacity style={styles.sendIcon} onPress={onNewComment}>
+                <Icon name='send' color={theme.colors.primaryDark} />
+              </TouchableOpacity>
+            )
+           }
+
         </View>
 
       </ScrollView>

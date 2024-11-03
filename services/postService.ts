@@ -1,6 +1,30 @@
 import { supabase } from "@/lib/supabase";
 import { uploadFile } from "./imageService";
 
+export const createComment = async (comment: any) => {
+    try
+    {
+        const {data, error} = await supabase
+        .from('comments')
+        .insert(comment)
+        .select()
+        .single()
+       
+       if(error)
+       {
+        console.log("post comment insertion error occured");
+        return {success: false, msg : 'comment post failed'};
+       }
+
+       return {success: true, data: data};
+    }
+    catch(error)
+    {
+        console.log("comment post error : ",error);
+        return {success : false, msg: "could not comment post"};
+    }
+}
+
 export const fetchPostsDetails = async (postId: any) => {
     try
     {
