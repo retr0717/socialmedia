@@ -21,6 +21,8 @@ import Loading from "@/components/Loading";
 import Input from "@/components/Input";
 import Icon from "@/assets/icons";
 import CommentItem from "@/components/CommentItem";
+import { supabase } from "@/lib/supabase";
+import { getUserData } from "@/services/userService";
 
 const PostDetails = () => {
   const { postId } = useLocalSearchParams();
@@ -32,9 +34,42 @@ const PostDetails = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
+  const handleNewComment = async (payload: any) => {
+    console.log("payload : ", payload.new);
+
+    if (payload.new) {
+      let newComment = { ...payload.new };
+      let res = await getUserData(newComment.userId);
+      newComment.user = res.success ? res.data : {};
+      setPost((prevPost: any) => {
+        return {
+          ...prevPost,
+          comments: [newComment, ...prevPost.comments],
+        };
+      });
+    }
+  };
+
   useEffect(() => {
+    let postChannel = supabase
+      .channel("comments")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "comments",
+          filter: `postId=eq.${postId}`,
+        },
+        handleNewComment,
+      )
+      .subscribe();
+
     getPostDetails();
-    console.log(post?.comments.length);
+
+    return () => {
+      supabase.removeChannel(postChannel);
+    };
   }, []);
 
   const getPostDetails = async () => {
