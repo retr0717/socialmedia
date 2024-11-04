@@ -8,7 +8,11 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { createComment, fetchPostsDetails } from "@/services/postService";
+import {
+  createComment,
+  fetchPostsDetails,
+  removeComment,
+} from "@/services/postService";
 import { hp, wp } from "@/helpers/common";
 import { theme } from "@/constants/theme";
 import PostCard from "@/components/PostCard";
@@ -82,6 +86,28 @@ const PostDetails = () => {
     );
   }
 
+  const onDeleteComment = async (comment: any) => {
+    const res = await removeComment(comment?.id);
+
+    if (res.success) {
+      setPost((prevPost: any) => {
+        let updatePost = { ...prevPost };
+
+        console.log("updated post : ", updatePost);
+
+        updatePost.comments = updatePost.comments.filter(
+          (item: any) => item.id != comment.id,
+        );
+
+        return updatePost;
+      });
+    } else {
+      Alert.alert("Comment", "Something Went Wrong!");
+    }
+
+    console.log(res);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -128,6 +154,7 @@ const PostDetails = () => {
                 key={comment.id.toString()}
                 item={comment}
                 canDelete={user.id == comment.userId || user.id == post.userid}
+                onDelete={onDeleteComment}
               />
             );
           })}

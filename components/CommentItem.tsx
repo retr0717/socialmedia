@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { theme } from "@/constants/theme";
 import { hp, wp } from "@/helpers/common";
@@ -9,12 +9,12 @@ import Icon from "@/assets/icons";
 const CommentItem = ({
   item,
   canDelete = false,
+  onDelete,
 }: {
   item: any;
   canDelete: boolean;
+  onDelete: any;
 }) => {
-  const onDelete = (item: any) => {};
-
   const handleDelete = () => {
     Alert.alert("Confirm", "Are You Sure?", [
       {
@@ -51,7 +51,7 @@ const CommentItem = ({
             </Text>
           </View>
           {canDelete && (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleDelete}>
               <Icon name="delete" size={20} color={theme.colors.rose} />
             </TouchableOpacity>
           )}
