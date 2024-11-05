@@ -24,6 +24,7 @@ import Icon from "@/assets/icons";
 import CommentItem from "@/components/CommentItem";
 import { supabase } from "@/lib/supabase";
 import { getUserData } from "@/services/userService";
+import { createNotification } from "@/services/notificationService";
 
 const PostDetails = () => {
   const { postId } = useLocalSearchParams();
@@ -92,6 +93,17 @@ const PostDetails = () => {
 
     if (res.success) {
       //send notification.
+      if (user.id != post.userid) {
+        let notify = {
+          senderId: user?.id,
+          receiverId: post?.userid,
+          title: "commented on your post",
+          data: JSON.stringify({ postId: post?.id, commentId: res?.data?.id }),
+        };
+
+        createNotification(notify);
+      }
+
       inputRef.current?.clear();
       commentRef.current = "";
     } else {
