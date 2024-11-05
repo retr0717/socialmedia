@@ -119,7 +119,6 @@ const PostCard = ({
       content.url = url;
     }
 
-    console.log(content);
     Share.share(content);
   };
 

@@ -29,9 +29,9 @@ const Home = () => {
   const router = useRouter();
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const handlePostEvent = async (payload: any) => {
-    console.log("pyload : ", payload);
     if (payload.eventType == "INSERT" && payload?.new?.id) {
       let newPost = { ...payload.new };
       let res = await getUserData(newPost?.userid);
@@ -77,13 +77,19 @@ const Home = () => {
     // }
   };
 
+  const handleNotificationEvent = (payload: any) => {
+    console.log("notification payload : ", payload.new);
+    if (payload.eventType == "INSERT" && payload.new.id)
+      setNotificationCount((prevCount) => prevCount + 1);
+  };
+
   useEffect(() => {
     let commentChannel = supabase
       .channel("comments")
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "comments",
           filter: `userId=eq.${user.id}`,
@@ -101,11 +107,25 @@ const Home = () => {
       )
       .subscribe();
 
+    let notificationChannel = supabase
+      .channel("notifications")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `receiverId=eq.${user?.id}`,
+        },
+        handleNotificationEvent,
+      )
+      .subscribe();
+
     getPosts();
 
     return () => {
-      supabase.removeChannel(commentChannel);
       supabase.removeChannel(postChannel);
+      supabase.removeChannel(notificationChannel);
     };
   }, []);
 
@@ -138,6 +158,11 @@ const Home = () => {
                 strokeWidth={2}
                 color={theme.colors.text}
               />
+              {notificationCount > 0 && (
+                <View style={styles.pill}>
+                  <Text style={styles.pillText}>{notificationCount}</Text>
+                </View>
+              )}
             </Pressable>
 
             <Pressable onPress={() => router.push("/(main)/NewPost")}>
@@ -240,6 +265,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -10,
     top: -4,
+    height: hp(2.2),
+    width: hp(2.2),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    backgroundColor: theme.colors.roseLight,
+  },
+  pillText: {
+    color: "white",
+    fontSize: hp(1.2),
+    fontWeight: theme.fonts.bold,
   },
 });
-

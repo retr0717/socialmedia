@@ -34,7 +34,6 @@ const CommentItem = ({
 
   const createdAt = moment(item.user.created_at).format("MMM D");
 
-  console.log(item?.user?.image);
   return (
     <View style={[styles.container]}>
       <Avatar uri={item?.user?.image} style={{ width: hp(4.5) }} />
