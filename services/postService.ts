@@ -1,6 +1,23 @@
 import { supabase } from "@/lib/supabase";
 import { uploadFile } from "./imageService";
 
+export const removePost = async (postId: string) => {
+  try {
+    const { error } = await supabase.from("posts").delete().eq("id", postId);
+
+    if (error) {
+      console.log("remove post error occured");
+      return { success: false, msg: "remove post failed" };
+    }
+
+    console.log(error);
+    return { success: true };
+  } catch (error) {
+    console.log("post delete error : ", error);
+    return { success: false, msg: "could not delete post" };
+  }
+};
+
 export const removeComment = async (commentId: string) => {
   try {
     const { error } = await supabase

@@ -16,7 +16,6 @@ const Avatar = ({
   rounded: number;
   style: any;
 }) => {
-  console.log(getUserImageSrc(uri));
   return (
     <Image
       source={getUserImageSrc(uri)}
@@ -35,4 +34,3 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
-

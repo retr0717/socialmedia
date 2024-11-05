@@ -12,6 +12,7 @@ import {
   createComment,
   fetchPostsDetails,
   removeComment,
+  removePost,
 } from "@/services/postService";
 import { hp, wp } from "@/helpers/common";
 import { theme } from "@/constants/theme";
@@ -35,8 +36,6 @@ const PostDetails = () => {
   const [loading, setLoading] = useState(false);
 
   const handleNewComment = async (payload: any) => {
-    console.log("payload : ", payload.new);
-
     if (payload.new) {
       let newComment = { ...payload.new };
       let res = await getUserData(newComment.userId);
@@ -128,8 +127,6 @@ const PostDetails = () => {
       setPost((prevPost: any) => {
         let updatePost = { ...prevPost };
 
-        console.log("updated post : ", updatePost);
-
         updatePost.comments = updatePost.comments.filter(
           (item: any) => item.id != comment.id,
         );
@@ -139,9 +136,19 @@ const PostDetails = () => {
     } else {
       Alert.alert("Comment", "Something Went Wrong!");
     }
-
-    console.log(res);
   };
+
+  const onDeletePost = async (item: any) => {
+    const res = await removePost(post?.id);
+
+    if (res.success) {
+      router.back();
+    } else {
+      Alert.alert("Post", "Something Went Wrong!");
+    }
+  };
+
+  const onEditPost = async (item: any) => {};
 
   return (
     <View style={styles.container}>
@@ -155,6 +162,9 @@ const PostDetails = () => {
           router={router}
           hasShadow={false}
           showMoreIcon={false}
+          showDelete={true}
+          onDelete={onDeletePost}
+          onEdit={onEditPost}
         />
 
         {/* comment input */}
