@@ -49,8 +49,6 @@ const Home = () => {
   };
 
   const handleNewComment = async (payload: any) => {
-    console.log("payload in home : ", payload.new);
-
     // if (payload.new) {
     //   let newComment = { ...payload.new };
     //   let res = await getUserData(newComment.userId);
@@ -109,22 +107,6 @@ const Home = () => {
       setPosts(res.data);
     }
   };
-
-  // const onLogout = async () => {
-
-  //     await setAuth(null);
-
-  //     const {error} = supabase.auth.signOut();
-
-  //     if(error)
-  //     {
-  //         Alert.alert('Logout', 'Logout failed!');
-  //     }
-  // }
-
-  const onDeletePost = (postId: any) => {};
-
-  const onEditPost = (postId: any) => {};
 
   return (
     <ScreenWrapper bg={"white"}>
