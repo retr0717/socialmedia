@@ -10,10 +10,12 @@ const CommentItem = ({
   item,
   canDelete = false,
   onDelete,
+  highlight,
 }: {
   item: any;
   canDelete: boolean;
   onDelete: any;
+  highlight: boolean;
 }) => {
   const handleDelete = () => {
     Alert.alert("Confirm", "Are You Sure?", [
@@ -31,11 +33,13 @@ const CommentItem = ({
   };
 
   const createdAt = moment(item.user.created_at).format("MMM D");
-  return (
-    <View style={styles.container}>
-      <Avatar uri={item?.user?.image} style={{ borderWidth: wp(4.5) }} />
 
-      <View style={styles.content}>
+  console.log(item?.user?.image);
+  return (
+    <View style={[styles.container]}>
+      <Avatar uri={item?.user?.image} style={{ width: hp(4.5) }} />
+
+      <View style={[styles.content, highlight && styles.highlight]}>
         <View
           style={{
             flexDirection: "row",
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
   highlight: {
-    borderWidth: 0.2,
+    borderWidth: 0.3,
     backgroundColor: "white",
     borderColor: theme.colors.dark,
     shadowColor: theme.colors.dark,
