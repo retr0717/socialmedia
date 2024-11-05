@@ -7,6 +7,7 @@ import { theme } from "@/constants/theme";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import NotificationItem from "@/components/NotificationItem";
 import { useRouter } from "expo-router";
+import Header from "@/components/Header";
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
@@ -26,6 +27,7 @@ const Notification = () => {
   return (
     <ScreenWrapper>
       <View style={styles.container}>
+        <Header title="Notifications" />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listStyle}
