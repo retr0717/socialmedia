@@ -30,11 +30,21 @@ const Home = () => {
   const [hasMore, setHasMore] = useState(true);
 
   const handlePostEvent = async (payload: any) => {
+    console.log("pyload : ", payload);
     if (payload.eventType == "INSERT" && payload?.new?.id) {
       let newPost = { ...payload.new };
       let res = await getUserData(newPost?.userid);
+      newPost.postLikes = [];
+      newPost.comments = [{ count: 0 }];
       newPost.user = res.success ? res.data : {};
       setPosts((prevPosts: any) => [newPost, ...prevPosts]);
+    }
+
+    if (payload.eventType == "DELETE" && payload?.old?.id) {
+      setPosts((prevPost) => {
+        let updatedPost = prevPost.filter((post) => post?.id != payload.old.id);
+        return updatedPost;
+      });
     }
   };
 
