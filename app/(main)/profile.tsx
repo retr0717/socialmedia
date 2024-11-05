@@ -33,7 +33,7 @@ const Profile = () => {
   const getPosts = async () => {
     if (!hasMore) return null;
 
-    limit += 4;
+    limit += 10;
 
     const res = await fetchPosts(limit, user?.id);
 
