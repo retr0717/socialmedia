@@ -20,6 +20,7 @@ import { fetchPosts } from "@/services/postService";
 import PostCard from "@/components/PostCard";
 import Loading from "@/components/Loading";
 import { getUserData } from "@/services/userService";
+import NewPost from "./NewPost";
 
 let limit = 0;
 
@@ -43,6 +44,20 @@ const Home = () => {
     if (payload.eventType == "DELETE" && payload?.old?.id) {
       setPosts((prevPost) => {
         let updatedPost = prevPost.filter((post) => post?.id != payload.old.id);
+        return updatedPost;
+      });
+    }
+
+    if (payload.eventType == "UPDATE" && payload?.new?.id) {
+      setPosts((prevPosts) => {
+        let updatedPost = prevPosts.map((post) => {
+          if (post?.id == payload?.new?.id) {
+            post.body = payload.new.body;
+            post.file = payload.new.file;
+          }
+
+          return post;
+        });
         return updatedPost;
       });
     }
