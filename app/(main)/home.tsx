@@ -151,7 +151,12 @@ const Home = () => {
           <Text style={styles.title}>ChitChat</Text>
 
           <View style={styles.icons}>
-            <Pressable onPress={() => router.push("/(main)/notification")}>
+            <Pressable
+              onPress={() => {
+                setNotificationCount(0);
+                router.push("/(main)/notification");
+              }}
+            >
               <Icon
                 name={"heart"}
                 size={hp(3.2)}
